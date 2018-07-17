@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import '../App.css';
 
 import NewsListItem from './news-list-item';
 
@@ -35,7 +36,7 @@ removeItem = objectID => () => {
 render(){
     const {list} = this.state;
     return(
-        <ul>
+        <table>
             {list.map(article => {
             return (
                 <NewsListItem
@@ -45,7 +46,7 @@ render(){
                 />
             );
             })}
-        </ul>
+        </table>
     )
         
 

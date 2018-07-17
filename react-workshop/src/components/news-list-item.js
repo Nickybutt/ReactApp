@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 
-const NewsListItem = ({article}) => {
+const NewsListItem = ({article, onClick}) => {
     return (
-        <td>
+        <div className="table-row">
+        <li>
             Title: <a href = {article.url}>{article.title}</a>
             Author: {article.author}
             Num comments: {article.num_comments}
             points: {article.points}
-            <button onClick={(event) =>  this.setState(' ')}> Dissmiss </button>
-        </td>
+            <button onClick={onClick}> Dissmiss </button>
+        </li>
+        </div>
     )
 }
 

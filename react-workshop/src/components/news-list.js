@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import NewsListItem from './news-list-item';
 
-const list = [
+const initalList = [
     {
     title: "react",
     url: 'https://github.com/Nickybutt/ReactApp/pull/',
@@ -19,17 +19,39 @@ const list = [
     objectID: 1,
   }, ];
 
-const NewsList = (props) => {
-    const newsItems = list.map((article) =>{
-        return <NewsListItem key={list.objectID} article={article} />
-    })
-    return (
-        <table className="table table-striped">
-        <tr className="list-group">
-        {newsItems}
-        </tr>
-        </table>
+class NewsList extends Component {
+constructor(props) {
+super(props)
+
+this.state = {list:[...initalList]}
+};
+
+removeItem = objectID => () => {
+    this.setState({
+        list: this.state.list.filter(item => item.objectID !== objectID)
+    });
+}
+
+render(){
+    const {list} = this.state;
+    return(
+        <ul>
+            {list.map(article => {
+            return (
+                <NewsListItem
+                key = {article.objectID}
+                article = {article}
+                onClick={this.removeItem(article.objectID)}
+                />
+            );
+            })}
+        </ul>
     )
+        
+
+
+}
+
 }
 
 export default NewsList;

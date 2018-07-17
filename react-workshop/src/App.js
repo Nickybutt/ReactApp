@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SearchBar from './components/search-bar';
 import NewsList from './components/news-list';
+import './App.css';
 
 
 class App extends Component {

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import NewsItem from "./news-item";
 import SearchBar from "./search-bar";
+import Button from "./button";
 
 class NewsList extends Component {
   constructor(props) {
@@ -16,6 +17,10 @@ class NewsList extends Component {
     this.setState({
       search: SearchName
     });
+  }
+
+  showAlert() {
+    alert("Dikke homo");
   }
 
   addNews(event) {
@@ -47,6 +52,9 @@ class NewsList extends Component {
     let filterContacts = this.state.list.filter(listItem => {
       return (
         listItem.title
+          .toLowerCase()
+          .indexOf(this.state.search.toLowerCase()) !== -1 ||
+        listItem.author
           .toLowerCase()
           .indexOf(this.state.search.toLowerCase()) !== -1
       );
@@ -98,20 +106,6 @@ class NewsList extends Component {
                 ref="author"
                 id="author"
               />
-              <label for="comments">Comments</label>
-              <input
-                className="form-control"
-                type="text"
-                ref="comments"
-                id="comments"
-              />
-              <label for="points">Points</label>
-              <input
-                className="form-control"
-                type="text"
-                ref="points"
-                id="points"
-              />
               <button className="btn btn-secondary" type="submit">
                 {" "}
                 Add news
@@ -119,6 +113,7 @@ class NewsList extends Component {
             </form>
           </div>
         </div>
+        <Button onClick={this.showAlert} />
       </div>
     );
   }

@@ -15,7 +15,12 @@ class NewsItem extends Component {
         <td>{this.props.listItem.num_comments}</td>
         <td>{this.props.listItem.points}</td>
         <td>
-          <button onClick={() => this.deleteItem()}>Dismiss</button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => this.deleteItem()}
+          >
+            Dismiss
+          </button>
         </td>
       </tr>
     );

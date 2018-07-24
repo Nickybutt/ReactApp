@@ -58,7 +58,7 @@ class NewsList extends Component {
             <SearchBar changeSearch={this.onChangenSearch.bind(this)} />
           </div>
 
-          <table className="table">
+          <table className="table table-hover">
             <thead>
               <tr>
                 <th>Title</th>

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import ContactList from "./components/news";
 
+import "./App.css";
+
 class App extends Component {
   render() {
     return (

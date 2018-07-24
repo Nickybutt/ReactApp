@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import App from "./App";
+import "./index.css";
 
 const list = [
   {
@@ -21,7 +22,7 @@ const list = [
     objectID: 1
   },
   {
-    title: "Redux",
+    title: "sketch",
     url: "https://github.com/reactjs/redux",
     author: "Dan Abramov, Andrew Clark",
     num_comments: 2,
@@ -29,7 +30,7 @@ const list = [
     objectID: 2
   },
   {
-    title: "Redux",
+    title: "Javascript",
     url: "https://github.com/reactjs/redux",
     author: "Dan Abramov, Andrew Clark",
     num_comments: 2,

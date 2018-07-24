@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 import React from "react";
 import ReactDOM from "react-dom";
-=======
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
->>>>>>> 3954834b3cb6f1142225fb0a67e0853b3080d5c3
 
 import App from "./App";
 

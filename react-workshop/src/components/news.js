@@ -13,18 +13,13 @@ class NewsList extends Component {
     };
   }
 
-  onChangenSearch(SearchName) {
-    this.setState({
-      search: SearchName
-    });
+  showAlert() {
+    alert("Moggu homo");
   }
 
-  showAlert() {
-    alert("Dikke homo");
-  }
+  onChangeSearch = search => this.setState({ search });
 
   addNews(event) {
-    console.log(this);
     event.preventDefault();
     let title = this.refs.title.value;
     let author = this.refs.author.value;
@@ -48,6 +43,11 @@ class NewsList extends Component {
     });
   }
 
+  toggleDiv = () => {
+    const { show } = this.state;
+    this.setState({ show: !show });
+  };
+
   render() {
     let filterContacts = this.state.list.filter(listItem => {
       return (
@@ -59,11 +59,13 @@ class NewsList extends Component {
           .indexOf(this.state.search.toLowerCase()) !== -1
       );
     });
+
+    const { search } = this.state;
     return (
       <div className="page">
         <div className="interactions">
           <div>
-            <SearchBar changeSearch={this.onChangenSearch.bind(this)} />
+            <SearchBar changeSearch={this.onChangeSearch} search={search} />
           </div>
 
           <table className="table table-hover">
@@ -92,14 +94,14 @@ class NewsList extends Component {
           <h1>Enter some extra news</h1>
           <div className="form-group">
             <form onSubmit={this.addNews.bind(this)}>
-              <label for="title">Title</label>
+              <label>Title</label>
               <input
                 className="form-control"
                 type="text"
                 ref="title"
                 id="title"
               />
-              <label for="author">Author</label>
+              <label>Author</label>
               <input
                 className="form-control"
                 type="text"
@@ -112,8 +114,8 @@ class NewsList extends Component {
               </button>
             </form>
           </div>
+          <Button alert={this.showAlert} />
         </div>
-        <Button onClick={this.showAlert} />
       </div>
     );
   }

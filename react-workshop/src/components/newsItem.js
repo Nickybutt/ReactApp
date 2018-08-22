@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class NewsItem extends Component {
   render() {
@@ -9,7 +10,7 @@ class NewsItem extends Component {
           <a href={listItem.url}>{listItem.title}</a>
         </td>
         <td>{listItem.author}</td>
-        <td>{listItem.num_comments}</td>
+        <td>{listItem.comments}</td>
         <td>{listItem.points}</td>
         <td>
           <button
@@ -23,5 +24,10 @@ class NewsItem extends Component {
     );
   }
 }
+
+NewsItem.proptypes = {
+  title: PropTypes.string,
+  author: PropTypes.string
+};
 
 export default NewsItem;

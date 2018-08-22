@@ -1,15 +1,19 @@
 import React, { Component } from "react";
 
-import ContactList from "./components/news";
+import NewsList from "./components/news";
 
 import "./App.css";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <div className="page">
-        <h1>List of contacts</h1>
-        <ContactList list={this.props.list} />
+        <h1>News list</h1>
+        <NewsList />
       </div>
     );
   }

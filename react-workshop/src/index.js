@@ -39,4 +39,4 @@ const list = [
   }
 ];
 
-ReactDOM.render(<App list={list} />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));

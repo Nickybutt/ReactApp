@@ -6,6 +6,9 @@ import NewsItem from "./newsItem";
 import SearchBar from "./searchBar";
 import Button from "./button";
 import SearchBarSubject from "./searchSubject";
+import TestForm from "./testFrom";
+
+let timer;
 
 class NewsList extends Component {
   constructor(props) {
@@ -17,58 +20,69 @@ class NewsList extends Component {
       author: "",
       isLoading: false,
       list: [],
-      SearchSubject: "Hacker",
+      total: null,
+      searchSubject: "",
+      lastSearch: "",
       page: 0,
-      divHeight: 0
+      searchList: this.createListFromSession()
     };
-  }
-
-  componentDidMount() {
-    // this.fetchData(0);
-    console.log("componentDidMount");
-  }
-
-  componentDidUpdate(prevprops, prevState) {
-    if (this.state.page !== prevState.page) {
-      //const newList = prevState.list.concat(this.state.list);
-      //this.setState({ list: newList });
-    }
   }
 
   fetchData(pageNumber) {
+    if (this.state.isLoading) return;
+
+    const listArray = pageNumber === 0 ? [] : this.state.list;
+
     this.setState({
       isLoading: true,
-      page: pageNumber
+      page: pageNumber,
+      list: listArray
     });
 
-    const tabelletje = {
-      height: "500px"
-    };
-
     const RootUrl = `https://hn.algolia.com/api/v1/search?query=${
-      this.state.SearchSubject
+      this.state.searchSubject
     }&tags=story&page=${pageNumber}`;
 
     fetch(RootUrl)
       .then(res => res.json())
-      .then(parsedJSON =>
-        parsedJSON.hits.map(item => ({
-          title: `${item.title}`,
-          author: `${item.author}`,
-          comments: `${item.num_comments}`,
-          points: `${item.points}`,
-          objectID: `${item.objectID}`
-        }))
-      )
-      .then(list => {
-        const listData = pageNumber === 0 ? list : this.state.list.concat(list);
-        this.setState({
-          list: listData,
-          isLoading: false
-        });
+      .then(parsedJSON => {
+        return {
+          hits: parsedJSON.hits.map(item => ({
+            title: `${item.title}`,
+            author: `${item.author}`,
+            comments: `${item.num_comments}`,
+            url: `${item.url}`,
+            points: `${item.points}`,
+            objectID: `${item.objectID}`
+          })),
+          total: parsedJSON.nbHits
+        };
       })
-      .catch(error => console.log("parsing failed", error));
+      .then(this.fetchSuccess)
+      .catch(this.fretchFailed);
   }
+
+  fetchSuccess = list => {
+    const listData =
+      this.state.page === 0 ? list.hits : this.state.list.concat(list.hits);
+    this.setState({
+      list: listData,
+      total: list.total,
+      isLoading: false,
+      lastSearch: this.state.searchSubject
+    });
+    // if (listData.length > 0) {
+    sessionStorage.setItem(
+      `searchTerm_${this.state.searchSubject}`,
+      JSON.stringify({
+        list: listData,
+        total: list.total
+      })
+    );
+    // }
+  };
+
+  fretchFailed = error => console.log("parsing failed", error);
 
   onChangeSearch = search => this.setState({ search });
 
@@ -84,7 +98,7 @@ class NewsList extends Component {
     });
   };
 
-  onChangeSubject = SearchSubject => this.setState({ SearchSubject });
+  onChangeSubject = searchSubject => this.setState({ searchSubject });
 
   addNews = event => {
     event.preventDefault();
@@ -115,26 +129,64 @@ class NewsList extends Component {
     this.setState({ show: !show });
   };
 
+  createListFromSession = () => {
+    const searchTermList = [];
+    for (var i = 0; i < sessionStorage.length; i++) {
+      const searchTerm = sessionStorage.key(i);
+      if (searchTerm.indexOf("searchTerm_") > -1) {
+        searchTermList.push(searchTerm.split("_")[1]);
+      }
+    }
+    return searchTermList;
+  };
+
   getSearchsubject = pageNumber => {
-    this.fetchData(pageNumber);
+    if (this.state.searchSubject === "") return;
+
+    const usedSearchTerm =
+      this.state.searchList.indexOf(this.state.searchSubject) > -1;
+    const searchListArray = usedSearchTerm
+      ? this.state.searchList
+      : this.state.searchList.concat(this.state.searchSubject);
+
+    this.setState({
+      searchList: searchListArray
+    });
+    console.log("used data from sessionStorage");
+    if (usedSearchTerm) {
+      const sessionData = JSON.parse(
+        sessionStorage.getItem(`searchTerm_${this.state.searchSubject}`)
+      );
+      this.setState({
+        lastSearch: this.state.searchSubject,
+        list: sessionData.list,
+        total: sessionData.total
+      });
+    } else {
+      this.fetchData(pageNumber);
+    }
   };
 
   onScrollHandler = () => {
-    this.state.divHeight = this.refs.inner.scrollHeight;
-    console.log(this.state.divHeight);
-    if (this.state.divHeight - 500 === this.refs.inner.scrollTop) {
-      {
-        this.getSearchsubject(0);
-      }
-      this.setState({
-        divHeight: this.refs.inner.scrollHeight + 500
-      });
+    clearTimeout(timer);
+    timer = setTimeout(() => this.getMore(), 500);
+  };
+
+  getMore = () => {
+    if (this.refs.inner.scrollHeight - 500 <= this.refs.inner.scrollTop) {
+      this.getSearchsubject(this.state.page + 1);
     }
   };
 
   render() {
-    console.log();
-    const { page, list, search, SearchSubject, isLoading } = this.state;
+    const {
+      list,
+      search,
+      total,
+      searchSubject,
+      isLoading,
+      lastSearch
+    } = this.state;
 
     let filterContacts = list.filter(listItem => {
       return (
@@ -145,6 +197,7 @@ class NewsList extends Component {
 
     return (
       <div className="page">
+        <TestForm search={search} />
         <div
           className="interactions"
           ref="inner"
@@ -159,14 +212,20 @@ class NewsList extends Component {
             </button>
             <SearchBarSubject
               changeSubject={this.onChangeSubject}
-              SearchSubject={SearchSubject}
+              searchSubject={searchSubject}
             />
           </div>
           <div>
             <SearchBar changeSearch={this.onChangeSearch} search={search} />
           </div>
 
-          <table className="table table-hover" style={this.tabelletje}>
+          {list.length > 0 && (
+            <h3>
+              {total} results for '{lastSearch}'
+            </h3>
+          )}
+
+          <table className="table table-hover">
             <thead>
               <tr>
                 <th>Title</th>
@@ -188,13 +247,7 @@ class NewsList extends Component {
             </tbody>
           </table>
 
-          {isLoading ? (
-            <MDSpinner className="spinner" size={100} />
-          ) : (
-            <button onClick={() => this.getSearchsubject(page + 1)}>
-              more
-            </button>
-          )}
+          {isLoading && <MDSpinner className="spinner" size={40} />}
         </div>
         <div>
           <h1>Enter some extra news</h1>

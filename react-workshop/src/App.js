@@ -5,10 +5,6 @@ import NewsList from "./components/news";
 import "./App.css";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="page">

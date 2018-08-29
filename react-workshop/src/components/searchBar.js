@@ -7,7 +7,7 @@ class SearchBar extends Component {
       <div className="form-group">
         <input
           type="text"
-          placeholder="search"
+          placeholder="filterSearch"
           value={search}
           onChange={event => changeSearch(event.target.value)}
         />

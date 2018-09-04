@@ -15,6 +15,7 @@ class NewsList extends Component {
     super(props);
 
     this.state = {
+      count: 0,
       search: "",
       title: "",
       author: "",
@@ -26,6 +27,10 @@ class NewsList extends Component {
       page: 0,
       searchList: this.createListFromSession()
     };
+  }
+
+  hello = () => {
+    'hello'
   }
 
   fetchData(pageNumber) {

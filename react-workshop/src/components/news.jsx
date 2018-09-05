@@ -15,7 +15,6 @@ class NewsList extends Component {
     super(props);
 
     this.state = {
-      count: 0,
       search: "",
       title: "",
       author: "",
@@ -30,6 +29,7 @@ class NewsList extends Component {
   }
 
   fetchData(pageNumber) {
+    console.log("fetching data");
     if (this.state.isLoading) return;
 
     const listArray = pageNumber === 0 ? [] : this.state.list;
@@ -142,6 +142,8 @@ class NewsList extends Component {
   };
 
   getSearchsubject = pageNumber => {
+    console.log(this.state.page);
+    console.log(pageNumber);
     if (this.state.searchSubject === "") return;
 
     const usedSearchTerm =
@@ -149,7 +151,7 @@ class NewsList extends Component {
     const searchListArray = usedSearchTerm
       ? this.state.searchList
       : this.state.searchList.concat(this.state.searchSubject);
-
+    console.log(usedSearchTerm);
     this.setState({
       searchList: searchListArray
     });
@@ -164,6 +166,7 @@ class NewsList extends Component {
         total: sessionData.total
       });
     } else {
+      console.log("fetching new data");
       this.fetchData(pageNumber);
     }
   };
@@ -175,7 +178,7 @@ class NewsList extends Component {
 
   getMore = () => {
     if (this.refs.inner.scrollHeight - 500 <= this.refs.inner.scrollTop) {
-      this.getSearchsubject(this.state.page + 1);
+      this.fetchData(this.state.page + 1);
     }
   };
 
@@ -198,7 +201,6 @@ class NewsList extends Component {
 
     return (
       <div className="page">
-        <TestForm search={search} />
         <div
           className="interactions"
           ref="inner"

@@ -1,5 +1,21 @@
-function sum(a, b) {
-    return a + b;
+import React, { Component } from "react";
+
+class Sum extends Component {
+  state = {
+    counter: 0
+  };
+
+  change(x) {
+    return x * 10;
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>{counter}</h1>
+      </div>
+    );
+  }
 }
 
-module.exports = sum;
+export default Sum;
